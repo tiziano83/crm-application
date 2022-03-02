@@ -1,11 +1,15 @@
 package com.devtb.crmapp.auth;
 
+import com.devtb.crmapp.domain.Role;
 import com.devtb.crmapp.domain.User;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 import java.util.stream.Collectors;
 
 
@@ -23,15 +27,16 @@ public class CustomUserDetails implements UserDetails {
         this.user = user;
     }
 
+
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
+        List<GrantedAuthority> authorities = new ArrayList<>();
+        for (Role role: user.getRoles()) {
+            authorities.add(new SimpleGrantedAuthority("ROLE_"+role.getRoleName()));
+        }
 
-        if (user.getRoles().isEmpty())
-            return Collections.emptyList();
-
-        return user.getRoles().stream().map(
-                role -> (GrantedAuthority) () -> ROLES_PREFIX + role
-        ).collect(Collectors.toList());
+        return authorities;
     }
 
     @Override
