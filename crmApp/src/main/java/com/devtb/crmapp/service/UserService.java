@@ -48,4 +48,8 @@ public class UserService {
         appUser.setRoles(rolesList);
         return appUser;
     }
+
+    public Optional<User> findById(Long creationUserId) {
+        return userRepository.findById(creationUserId);
+    }
 }

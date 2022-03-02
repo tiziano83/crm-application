@@ -1,15 +1,17 @@
 package com.devtb.crmapp.domain;
 
+import com.devtb.crmapp.service.DTOS.CustomerRequestDTO;
+import com.devtb.crmapp.service.DTOS.CustomerResponseDTO;
+
 import javax.persistence.*;
 
-@Entity(name="customers")
+@Entity(name = "customers")
 public class Customer extends BaseEntity {
 
     private String name;
     private String surname;
     private User creationUser;
     private User updateUser;
-    @Lob
     private byte[] profileImage;
 
 
@@ -21,7 +23,7 @@ public class Customer extends BaseEntity {
     }
 
     public void setId(Long id) {
-        super.id=id;
+        super.id = id;
     }
 
     public String getName() {
@@ -40,6 +42,8 @@ public class Customer extends BaseEntity {
         this.surname = surname;
     }
 
+    @Lob
+    @Column(name = "profileImage", columnDefinition="BLOB")
     public byte[] getProfileImage() {
         return profileImage;
     }
@@ -48,7 +52,7 @@ public class Customer extends BaseEntity {
         this.profileImage = logo;
     }
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "createUser")
     public User getCreationUser() {
         return creationUser;
@@ -59,7 +63,7 @@ public class Customer extends BaseEntity {
     }
 
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "updateUser")
     public User getUpdateUser() {
         return updateUser;
@@ -69,5 +73,25 @@ public class Customer extends BaseEntity {
         this.updateUser = user;
     }
 
+    public CustomerRequestDTO toCustomerRequestDTO() {
+        CustomerRequestDTO customerRequestDTO = new CustomerRequestDTO();
+        customerRequestDTO.setCustomerID(getId());
+        customerRequestDTO.setName(getName());
+        customerRequestDTO.setSurname(getSurname());
+        if (getCreationUser() != null)
+            customerRequestDTO.setCreationUserId(getCreationUser().getId());
+        if (getUpdateUser() != null)
+            customerRequestDTO.setUpdateUserId(getUpdateUser().getId());
+        return customerRequestDTO;
+    }
 
+    public CustomerResponseDTO toCustomerResponseDTO() {
+        CustomerResponseDTO customerResponseDTO = new CustomerResponseDTO();
+        customerResponseDTO.setCreationUser(getCreationUser());
+        customerResponseDTO.setUpdateUser(getUpdateUser());
+        customerResponseDTO.setName(getName());
+        customerResponseDTO.setSurname(getSurname());
+        customerResponseDTO.setProfileImage(getProfileImage());
+        return customerResponseDTO;
+    }
 }
