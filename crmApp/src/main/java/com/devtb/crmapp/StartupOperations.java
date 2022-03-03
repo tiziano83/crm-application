@@ -27,7 +27,7 @@ public class StartupOperations {
 
         try {
             roleService.createDefaultRoles();
-            userService.createDefaultUser();
+            userService.createDefaultUsers();
 
         } catch (Exception e) {
             e.printStackTrace();

@@ -1,8 +1,7 @@
 package com.devtb.crmapp.domain;
 
-import java.io.Serializable;
 
-public abstract class BaseEntity implements Serializable {
+public abstract class BaseEntity {
    protected Long id;
 
 }

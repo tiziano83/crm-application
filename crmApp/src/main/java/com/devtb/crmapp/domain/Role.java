@@ -1,10 +1,12 @@
 package com.devtb.crmapp.domain;
 
+import com.devtb.crmapp.service.DTOS.RoleDTO;
+
 import javax.persistence.*;
 import java.util.Collection;
 
 @Entity(name = "roles")
-public class Role extends BaseEntity{
+public class Role extends BaseEntity {
 
     private String roleName;
 
@@ -19,7 +21,7 @@ public class Role extends BaseEntity{
     }
 
     public void setId(Long id) {
-        super.id=id;
+        super.id = id;
     }
 
     public String getRoleName() {
@@ -29,4 +31,12 @@ public class Role extends BaseEntity{
     public void setRoleName(String roleName) {
         this.roleName = roleName;
     }
+
+    public RoleDTO toRoleDTO() {
+        RoleDTO roleDTO = new RoleDTO();
+        roleDTO.setRoleId(getId());
+        roleDTO.setRoleName(getRoleName());
+        return roleDTO;
+    }
+
 }

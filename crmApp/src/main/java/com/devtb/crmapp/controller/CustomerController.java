@@ -1,7 +1,7 @@
 package com.devtb.crmapp.controller;
 
 import com.devtb.crmapp.service.DTOS.CustomerRequestDTO;
-import com.devtb.crmapp.domain.Customer;
+
 import com.devtb.crmapp.service.CustomerService;
 import com.devtb.crmapp.service.DTOS.CustomerResponseDTO;
 import org.slf4j.Logger;
@@ -17,10 +17,10 @@ import java.util.List;
 
 @RestController
 public class CustomerController extends AbstractController {
+
     private final static Logger log = LoggerFactory.getLogger(CustomerController.class);
 
-
-    private CustomerService customerService;
+    private final CustomerService customerService;
     private static final String mapping = "/customer";
 
     public CustomerController(CustomerService customerService) {
@@ -49,7 +49,7 @@ public class CustomerController extends AbstractController {
     public ResponseEntity<String> createNewCustomer(@RequestPart("CustomerDTO") CustomerRequestDTO customerDTO, @RequestPart("photo") MultipartFile photo) {
         try {
             customerService.createNewCustomer(customerDTO, photo);
-            return ResponseEntity.ok("user created");
+            return ResponseEntity.ok("customer created");
         } catch (Exception e) {
             log.error("error on createNewCustomer - {}", e.getMessage());
             return ResponseEntity.badRequest().body(e.getMessage());
@@ -61,7 +61,7 @@ public class CustomerController extends AbstractController {
     public ResponseEntity<String> updateCustomer(@RequestPart("CustomerDTO") CustomerRequestDTO customerDTO) {
         try {
             customerService.updateCustomer(customerDTO);
-            return ResponseEntity.ok("user updated");
+            return ResponseEntity.ok("customer updated");
         } catch (Exception e) {
             log.error("error on updateCustomer - {}", e.getMessage());
             return ResponseEntity.badRequest().body(e.getMessage());
@@ -69,11 +69,11 @@ public class CustomerController extends AbstractController {
     }
 
     @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_USER')")
-    @PutMapping(mapping+"/photo")
+    @PutMapping(mapping + "/photo")
     public ResponseEntity<String> updateCustomerWithPhoto(@RequestPart("CustomerDTO") CustomerRequestDTO customerDTO, @RequestPart("photo") MultipartFile photo) {
         try {
             customerService.updateCustomerWithPhoto(customerDTO, photo);
-            return ResponseEntity.ok("user updated");
+            return ResponseEntity.ok("customer updated");
         } catch (Exception e) {
             log.error("error on updateCustomerWithPhoto - {}", e.getMessage());
             return ResponseEntity.badRequest().body(e.getMessage());
@@ -81,11 +81,11 @@ public class CustomerController extends AbstractController {
     }
 
     @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_USER')")
-    @DeleteMapping(mapping+"/{customerId}")
+    @DeleteMapping(mapping + "/{customerId}")
     public ResponseEntity<String> deleteCustomer(@PathVariable("customerId") Long customerId) {
         try {
             customerService.deleteCustomer(customerId);
-            return ResponseEntity.ok("user deleted");
+            return ResponseEntity.ok("customer deleted");
         } catch (Exception e) {
             log.error("error on deleteCustomer - {}", e.getMessage());
             return ResponseEntity.badRequest().body(e.getMessage());

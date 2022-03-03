@@ -17,26 +17,42 @@ import java.util.stream.Collectors;
 @Transactional
 public class CustomerService {
 
-    private CustomerRepository customerRepository;
-    private UserService userService;
+    private final CustomerRepository customerRepository;
+    private final UserService userService;
 
     public CustomerService(CustomerRepository customerRepository, UserService userService) {
         this.customerRepository = customerRepository;
         this.userService = userService;
     }
 
+    /**
+     * Method that returns a list of CustomerRequestDTO.
+     * Returns a list of this tipe for ligthen the response payload, passing less information.
+     * @return
+     */
     public List<CustomerRequestDTO> getAllCustomer() {
         List<Customer> customers = customerRepository.findAll();
         return customers.stream().map(Customer::toCustomerRequestDTO).collect(Collectors.toList());
     }
 
+    /**
+     * method that returns a customer by id, if not found throws an exception
+     * @param customerId
+     * @return
+     * @throws Exception
+     */
     public CustomerResponseDTO findById(Long customerId) throws Exception {
-        Optional<Customer> customer = customerRepository.findById(customerId);
-        if (customer.isPresent())
-            return customer.get().toCustomerResponseDTO();
-        throw new Exception("Customer not found");
+        Optional<Customer> customer = findCustomerById(customerId);
+        return customer.get().toCustomerResponseDTO();
     }
 
+    /**
+     * method for creation of a new Customer, also with profile photo
+     * Will be inserted a reference to the user who created it.
+     * @param customerDTO
+     * @param photo
+     * @throws Exception
+     */
     public void createNewCustomer(CustomerRequestDTO customerDTO, MultipartFile photo) throws Exception {
         validate(customerDTO, photo, true);
 
@@ -55,6 +71,12 @@ public class CustomerService {
 
     }
 
+    /**
+     * method for update a Customer without updating the profile photo
+     * Will be inserted a reference to the user who updated it.
+     * @param customerDTO
+     * @throws Exception
+     */
     public void updateCustomer(CustomerRequestDTO customerDTO) throws Exception {
         validate(customerDTO, null, false);
 
@@ -62,13 +84,27 @@ public class CustomerService {
 
     }
 
+
+    /**
+     * method for update a Customer and his profile photo
+     * Will be inserted a reference to the user who updated it.
+     * @param customerDTO
+     * @Param photo
+     * @throws Exception
+     */
     public void updateCustomerWithPhoto(CustomerRequestDTO customerDTO, MultipartFile photo) throws Exception {
         validate(customerDTO, photo, false);
 
         update(customerDTO, photo);
     }
 
-
+    /**
+     * method for validate an insert or update request for Customer
+     * @param customerDTO
+     * @param photo
+     * @param creation
+     * @throws Exception
+     */
     private void validate(CustomerRequestDTO customerDTO, MultipartFile photo, boolean creation) throws Exception {
 
         if (customerDTO.getName() == null || customerDTO.getName().trim().isEmpty())
@@ -99,10 +135,16 @@ public class CustomerService {
     }
 
     public void deleteCustomer(Long customerId) throws Exception {
+        findCustomerById(customerId);
         customerRepository.deleteById(customerId);
     }
 
-
+    /**
+     * private method for customer update management
+     * @param customerDTO
+     * @param photo
+     * @throws Exception
+     */
     private void update(CustomerRequestDTO customerDTO, MultipartFile photo) throws Exception {
         Optional<Customer> customer = findCustomerById(customerDTO.getCustomerID());
 

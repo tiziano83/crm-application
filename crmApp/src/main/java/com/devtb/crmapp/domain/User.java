@@ -1,9 +1,12 @@
 package com.devtb.crmapp.domain;
 
+import com.devtb.crmapp.service.DTOS.UserResponseDTO;
+
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
-@Entity(name="users")
+@Entity(name = "users")
 public class User extends BaseEntity {
 
     private String userName;
@@ -19,7 +22,7 @@ public class User extends BaseEntity {
     }
 
     public void setId(Long id) {
-        super.id=id;
+        super.id = id;
     }
 
     public String getUserName() {
@@ -62,5 +65,14 @@ public class User extends BaseEntity {
 
     public void setFullName(String fullname) {
         this.fullName = fullname;
+    }
+
+    public UserResponseDTO toUserResponseDTO() {
+        UserResponseDTO userResponseDTO = new UserResponseDTO();
+        userResponseDTO.setUserId(getId());
+        userResponseDTO.setUserName(getUserName());
+        userResponseDTO.setFullName(getFullName());
+        userResponseDTO.setRoles(new ArrayList<>(getRoles()));
+        return userResponseDTO;
     }
 }
