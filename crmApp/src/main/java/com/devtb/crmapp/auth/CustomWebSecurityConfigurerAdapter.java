@@ -19,8 +19,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 public class CustomWebSecurityConfigurerAdapter extends WebSecurityConfigurerAdapter {
 
 
-    private UserDetailsService userDetailsService;
-    private BCryptPasswordEncoder bCryptPasswordEncoder;
+    private final UserDetailsService userDetailsService;
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
     public CustomWebSecurityConfigurerAdapter(UserDetailsService userDetailsService) {
 
@@ -31,11 +31,6 @@ public class CustomWebSecurityConfigurerAdapter extends WebSecurityConfigurerAda
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
-
-                .cors()
-                .and()
-                .headers().frameOptions().disable().and()
-                .csrf().disable()
                 .authorizeRequests()
                 .antMatchers(
                         "/login"
@@ -50,10 +45,12 @@ public class CustomWebSecurityConfigurerAdapter extends WebSecurityConfigurerAda
                 .httpBasic()
                 .and()
                 .sessionManagement()
-                .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-
-
-
+                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                .and()
+                .cors()
+                .and()
+                .csrf().disable()
+                .headers().frameOptions().disable().and().headers().xssProtection();
     }
 
     @Override

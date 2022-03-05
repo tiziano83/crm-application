@@ -1,7 +1,6 @@
 package com.devtb.crmapp.service;
 
 import com.devtb.crmapp.domain.Role;
-import com.devtb.crmapp.domain.User;
 import com.devtb.crmapp.repository.RoleRepository;
 import com.devtb.crmapp.service.DTOS.RoleDTO;
 import org.springframework.stereotype.Service;
@@ -16,12 +15,16 @@ import java.util.stream.Collectors;
 @Transactional
 public class RoleService {
 
-    private RoleRepository roleRepository;
+    private final RoleRepository roleRepository;
 
     public RoleService(RoleRepository roleRepository) {
         this.roleRepository = roleRepository;
     }
 
+    /**
+     * Method for creation of default users if not exists
+     * @throws Exception
+     */
     public void createDefaultRoles() throws Exception {
         try {
             if (roleRepository.findByRoleName("ADMIN").isEmpty())
@@ -43,6 +46,12 @@ public class RoleService {
         return roleRepository.findByRoleName(roleName);
     }
 
+    /**
+     * Method that retrieves roles by each id passed in list
+     * @param roleIds
+     * @return
+     * @throws Exception
+     */
     public List<Role> getValidRoles(List<Long> roleIds) throws Exception {
         List<Role> roles = new ArrayList<>();
         for (Long roleId : roleIds) {
@@ -53,6 +62,7 @@ public class RoleService {
         }
         return roles;
     }
+
 
     public List<RoleDTO> getAllRoles() {
         return roleRepository.findAll()
@@ -87,6 +97,12 @@ public class RoleService {
         roleRepository.save(r);
     }
 
+    /**
+     * method that execute validation operations on RoleDTO entities passed to the API
+     * @param roleDTO
+     * @param creation
+     * @throws Exception
+     */
     private void validate(RoleDTO roleDTO, boolean creation) throws Exception {
         if (roleDTO.getRoleName() == null || roleDTO.getRoleName().trim().isEmpty())
             throw new Exception("Role name is required");

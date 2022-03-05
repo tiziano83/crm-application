@@ -21,7 +21,7 @@ public class CustomUserDetails implements UserDetails {
 
     public static final String ROLES_PREFIX = "ROLE_";
 
-    private User user;
+    private final User user;
 
     public CustomUserDetails(User user) {
         this.user = user;

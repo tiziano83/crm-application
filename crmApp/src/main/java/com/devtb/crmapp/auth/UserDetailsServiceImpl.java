@@ -14,7 +14,7 @@ import java.util.Optional;
 public class UserDetailsServiceImpl implements UserDetailsService {
 
 
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
 
     public UserDetailsServiceImpl(UserRepository userRepository) {
 
@@ -26,11 +26,10 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
         Optional<User> applicationUser = userRepository.findByUserName(username);
-        if (!applicationUser.isPresent()) {
+        if (applicationUser.isEmpty()) {
             throw new UsernameNotFoundException(username);
         }
         return new CustomUserDetails(applicationUser.get());
-        //return new User(applicationUser.get().getUserName(), applicationUser.get().getPassword(), emptyList());
 
     }
 }
