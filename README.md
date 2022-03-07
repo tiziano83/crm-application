@@ -17,7 +17,7 @@ Authentication method is Basic Auth.
 | username | password     | role |
 |----------| -------------|------|
 | admin    |admin         |ADMIN |
-|  user    |user          |ROLE  |
+|  user    |user          |USER  |
 
 
 
